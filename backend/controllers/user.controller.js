@@ -53,10 +53,17 @@ const signUpRoute = async function (req, res) {
     const user = await User.create({ firstName, lastName, password, username });
     const balance = getRandomBalance();
     const account = await Account.create({ user: user._id, balance });
+
+    const token = jwt.sign(
+      { username, id: user._id },
+      process.env.SECRET_TOKEN
+    );
+
     return res.status(200).json(
       new ApiResponse(200, 'successfully sending user data', {
         username: user.username,
         balance: account.balance,
+        token,
       })
     );
   } catch (err) {
