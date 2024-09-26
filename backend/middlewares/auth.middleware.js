@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const authMiddlware = function (req, res, next) {
   // get the authorization token from the req.headers
   const authToken = req.headers.authorization;
-  if (!authToken || !authToken.startswith('Bearer ')) {
+  if (!authToken || !authToken.startsWith('Bearer ')) {
     return res
       .status(404)
       .json(new ApiResponse(404, 'not valid authToken in authMiddleware', ''));

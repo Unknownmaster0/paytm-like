@@ -19,10 +19,10 @@ const lastNameSchema = zod
   .min(1, { message: 'last name is required' });
 
 const updateBodySchema = zod.object({
-  password: zod.string().min(1),
-  username: zod.string().min(1),
-  firstName: zod.string().min(1),
-  lastname: zod.string().min(1),
+  password: zod.string().optional(),
+  username: zod.string().optional(),
+  firstName: zod.string().optional(),
+  lastName: zod.string().optional(),
 });
 
 module.exports = {
@@ -30,5 +30,5 @@ module.exports = {
   passwordSchema,
   firstNameSchema,
   lastNameSchema,
-  updateBodySchema
+  updateBodySchema,
 };
