@@ -1,15 +1,115 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AppBar } from "../Components/AppBarComponent";
 import { Balance } from "../Components/BalanceComponent";
 import { InputComponent } from "../Components/InputBoxComponent";
+import { ButtonComponent } from "../Components/ButtonComponent";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = function ({ balance }) {
+  const [inputVal, setInput] = useState("");
+  const [users, setUsers] = useState([]);
+  const [authenciated, setAuthenciated] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/signin");
+          return;
+        }
+
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/user/validate",
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+
+        if (response.data.success) {
+          setAuthenciated(true);
+        } else {
+          navigate("/signin");
+          return;
+        }
+      } catch (err) {
+        console.error(`Error while validation of the user ${err}`);
+        navigate("/signin");
+        return;
+      }
+    })();
+  }, [navigate]);
+
+  // Use useCallback for debounced search request
+  const sendRequest = useCallback(async () => {
+    const response = await axios.get(
+      `http://localhost:8000/api/v1/user/bulk?filter=${inputVal}`,
+      {
+        headers: {
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    setUsers(response.data.data);
+  }, [inputVal]);
+
+  // Debounce the sendRequest call
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      sendRequest();
+    }, 500); // Debounce with a 500ms delay
+
+    // Cleanup the timer when inputVal changes or component unmounts
+    return () => clearTimeout(timer);
+  }, [inputVal, sendRequest]);
+
+  if (!authenciated) return null;
+
   return (
     <div>
       <AppBar />
       <div className="px-10 py-2">
         <Balance balance={balance} />
-        <InputComponent label={"Users"} placeholder={"search users"} />
+        <InputComponent
+          label={"Users"}
+          placeholder={"search users"}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        {users.map((user, idx) => (
+          <UserDislay key={user.id} user={user} />
+        ))}
       </div>
     </div>
   );
 };
+
+// user component here.
+function UserDislay({ user }) {
+  const firstLetter = user.firstName[0];
+  const navigate = useNavigate();
+  return (
+    <div className="flex justify-between my-2">
+      <div className="flex items-center">
+        <div className="w-10 h-10 rounded-full bg-slate-500 flex justify-center items-center">
+          <div className="text-zinc-100">{firstLetter}</div>
+        </div>
+        <div className="pl-2">
+          {user.firstName} {user.lastName}
+        </div>
+      </div>
+      <ButtonComponent
+        label={"Send Money"}
+        onClick={(e) =>
+          navigate(
+            `/sendMoney?id=${user.id}&name=${user.firstName} ${user.lastName}`
+          )
+        }
+      />
+    </div>
+  );
+}

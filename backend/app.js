@@ -3,21 +3,21 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
+// cors policy
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'https://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+);
+
 // here we will use the middlewares
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
-  })
-);
-
-// cors policy
-app.use(
-  cors({
-    origin: 'https://localhost:5173',
-    methods: ['GET', 'POST', 'PUT'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
   })
 );
 

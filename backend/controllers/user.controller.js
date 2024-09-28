@@ -90,16 +90,15 @@ const update = async function (req, res) {
 
 // this is something, nice of finding the user with name either in their firstName or in lastName.
 const bulk = async function (req, res) {
-  const filter = req.params.filter || '';
-
+  const filter = req.query.filter || '';
   try {
     const users = await User.find({
       $or: [
         {
-          firstName: { $regex: filter },
+          firstName: { $regex: filter, $options: 'i' },
         },
         {
-          lastName: { $regex: filter },
+          lastName: { $regex: filter, $options: 'i' },
         },
       ],
     });
@@ -121,9 +120,15 @@ const bulk = async function (req, res) {
   }
 };
 
+const validate = async function (req, res) {
+  // if request comes here means the user is valid, then simply send the valid user response.
+  res.status(200).json(new ApiResponse(200, 'Valid user', ''));
+}
+
 module.exports = {
   signInRoute,
   signUpRoute,
   update,
   bulk,
+  validate,
 };

@@ -1,15 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Signin } from "./Pages/Signin";
 import { Signup } from "./Pages/Signup";
-import { SendMoney } from "./Components/SendMoneyComponent";
+import { SendMoney } from "./Pages/SendMoney";
+import { Dashboard } from "./Pages/Dashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <div>
-        {/* <MainComponent /> */}
-        {/* <Dashboard balance={"Rs 10,000"} /> */}
-        <SendMoney />
+        <MainComponent />
       </div>
     </BrowserRouter>
   );
@@ -18,10 +17,10 @@ function App() {
 function MainComponent() {
   return (
     <Routes>
+      <Route path="/" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" />
-      <Route path="/sendmoney" />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/sendmoney" element={<SendMoney />} />
     </Routes>
   );
 }

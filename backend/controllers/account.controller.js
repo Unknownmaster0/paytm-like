@@ -11,18 +11,15 @@ const balance = async function (req, res) {
 
 const transfer = async function (req, res) {
   // wrap everything inside the transaction session, such that if the transaction will complete in one go or fail, not hung in between.
-
   const session = await mongoose.startSession();
-  session.startTransaction();
-
+  
   try {
     // validate the toUser(receiver).
     const isValidReceiver = await validateReceiver(req.body.to, session);
     if (!isValidReceiver) {
-      session.abortTransaction();
       return res
         .status(403)
-        .json(new ApiResponse(403, 'User have no account', ''));
+        .json(new ApiResponse(403, 'Receiver have no account', ''));
     }
 
     // get fromUser(sender) account
@@ -30,15 +27,16 @@ const transfer = async function (req, res) {
       session
     );
     const money = senderAccount.balance;
-    console.log(money);
-
+    
     // check amount condition(sender account balance)
     if (money < req.body.amount) {
-      session.abortTransaction();
       return res
-        .status(404)
-        .json(new ApiResponse(404, 'insufficient balance', ''));
+      .status(404)
+      .json(new ApiResponse(404, 'insufficient balance in sender account', ''));
     }
+    
+    // if all pre-checks are correct then good to go, with the transaction.
+    session.startTransaction(); // abort transaction will create a backend down, thus move the transactionSession logic down.
 
     // if all checks passed
     // exchange money from fromUser(sender) to toUser(receiver)
@@ -58,7 +56,6 @@ const transfer = async function (req, res) {
 
     // commit session
     await session.commitTransaction();
-    session.endSession();
 
     return res
       .status(200)

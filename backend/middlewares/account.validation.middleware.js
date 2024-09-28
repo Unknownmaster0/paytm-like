@@ -7,12 +7,12 @@ const accountMiddleware = async function (req, res, next) {
     // checking if user has proper account or not.
     if (!account) {
       return res
-        .status(403)
-        .json(new ApiResponse(403, 'User have no account', ''));
+      .status(403)
+      .json(new ApiResponse(403, 'Sender have no account', ''));
+    } else {
+      // if get the valid account user, then call the next middleware.
+      next();
     }
-
-    // if get the valid account user, then call the next middleware.
-    next();
   } catch (err) {
     console.error(
       `Error while getting data from db in account validation middleware: ${err}`
