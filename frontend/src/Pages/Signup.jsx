@@ -17,11 +17,11 @@ export const Signup = function () {
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <div>
         <AppBar />
       </div>
-      <div className="h-[calc(100vh-100px)] flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center">
         <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
           <TopBar label={"Sign Up"} />
           <TopBarText text={"Enter the details to "} to={"signup"} />
@@ -78,7 +78,7 @@ export const Signup = function () {
                 );
                 navigate("/dashboard");
               } catch (error) {
-                alert(error.message);
+                alert("Enter the valid input");
               }
             }}
             label={"Sign Up"}
