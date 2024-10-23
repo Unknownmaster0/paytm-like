@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppBar } from "../Components/AppBarComponent";
+import { BACKEND_URL } from "../url";
 
 export const Signup = function () {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export const Signup = function () {
               }
               try {
                 const response = await axios.post(
-                  "http://localhost:8000/api/v1/user/signup",
+                  `${BACKEND_URL}/api/v1/user/signup`,
                   {
                     firstName,
                     lastName,

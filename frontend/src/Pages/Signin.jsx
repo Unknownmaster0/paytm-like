@@ -6,6 +6,7 @@ import { BottomTexts } from "../Components/BottomTextComponent";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../url";
 
 export const Signin = function () {
   const [username, setUsername] = useState("");
@@ -31,7 +32,7 @@ export const Signin = function () {
           label={"Sign In"}
           onClick={async () => {
             const response = await axios.post(
-              "http://localhost:8000/api/v1/user/signin",
+              `${BACKEND_URL}/api/v1/user/signin`,
               {
                 username,
                 password,

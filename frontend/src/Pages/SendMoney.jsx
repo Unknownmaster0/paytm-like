@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../url";
 
 export const SendMoney = function () {
   const [searchParams] = useSearchParams();
@@ -22,7 +23,7 @@ export const SendMoney = function () {
         }
 
         const response = await axios.get(
-          "http://localhost:8000/api/v1/user/validate",
+          `${BACKEND_URL}/api/v1/user/validate`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -75,7 +76,7 @@ export const SendMoney = function () {
           className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300"
           onClick={async () => {
             const response = await axios.post(
-              "http://localhost:8000/api/v1/account/transfer",
+              `${BACKEND_URL}/api/v1/account/transfer`,
               {
                 to: id,
                 amount: money,

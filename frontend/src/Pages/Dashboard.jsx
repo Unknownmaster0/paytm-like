@@ -5,6 +5,7 @@ import { InputComponent } from "../Components/InputBoxComponent";
 import { ButtonComponent } from "../Components/ButtonComponent";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../url";
 
 export const Dashboard = function () {
   const [inputVal, setInput] = useState("");
@@ -24,7 +25,7 @@ export const Dashboard = function () {
         }
 
         const response = await axios.get(
-          "http://localhost:8000/api/v1/user/validate",
+          `${BACKEND_URL}/api/v1/user/validate`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -51,7 +52,7 @@ export const Dashboard = function () {
   // Use useCallback for debounced search request
   const sendRequest = useCallback(async () => {
     const response = await axios.get(
-      `http://localhost:8000/api/v1/user/bulk?filter=${inputVal}`,
+      `${BACKEND_URL}/api/v1/user/bulk?filter=${inputVal}`,
       {
         headers: {
           Authorization: `${localStorage.getItem("token")}`,
