@@ -6,10 +6,11 @@ import { ButtonComponent } from "../Components/ButtonComponent";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const Dashboard = function ({ balance }) {
+export const Dashboard = function () {
   const [inputVal, setInput] = useState("");
   const [users, setUsers] = useState([]);
   const [authenciated, setAuthenciated] = useState(false);
+  const [balance, setBalance] = useState(null);
 
   const navigate = useNavigate();
 
@@ -33,6 +34,8 @@ export const Dashboard = function ({ balance }) {
 
         if (response.data.success) {
           setAuthenciated(true);
+          const res = response.data.data;
+          setBalance(res.balance);
         } else {
           navigate("/signin");
           return;

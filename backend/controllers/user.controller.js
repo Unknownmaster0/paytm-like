@@ -122,8 +122,19 @@ const bulk = async function (req, res) {
 
 const validate = async function (req, res) {
   // if request comes here means the user is valid, then simply send the valid user response.
-  res.status(200).json(new ApiResponse(200, 'Valid user', ''));
-}
+  // send the userDetails to the user.
+  const userDetails = await User.findOne({ _id: req.userId });
+  const user = await Account.findOne({ user: req.userId });
+  const username = userDetails.firstName + ' ' + userDetails.lastName;
+  const balanceString = String(user.balance).split('.');
+  const finalString = balanceString[0] + '.' + balanceString[1].slice(0, 2);
+  res.status(200).json(
+    new ApiResponse(200, 'Valid user', {
+      name: username,
+      balance: finalString,
+    })
+  );
+};
 
 module.exports = {
   signInRoute,

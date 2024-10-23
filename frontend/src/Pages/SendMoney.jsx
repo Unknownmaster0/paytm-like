@@ -86,8 +86,7 @@ export const SendMoney = function () {
                 },
               }
             );
-
-            console.log(response.data);
+            navigate("/dashboard");
           }}
         >
           Initiate Transfer
