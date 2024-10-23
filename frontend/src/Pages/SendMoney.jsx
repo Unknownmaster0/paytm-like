@@ -75,19 +75,23 @@ export const SendMoney = function () {
         <button
           className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300"
           onClick={async () => {
-            const response = await axios.post(
-              `${BACKEND_URL}/api/v1/account/transfer`,
-              {
-                to: id,
-                amount: money,
-              },
-              {
-                headers: {
-                  Authorization: localStorage.getItem("token"),
+            try {
+              const response = await axios.post(
+                `${BACKEND_URL}/api/v1/account/transfer`,
+                {
+                  to: id,
+                  amount: money,
                 },
-              }
-            );
-            navigate("/dashboard");
+                {
+                  headers: {
+                    Authorization: localStorage.getItem("token"),
+                  },
+                }
+              );
+              navigate("/dashboard");
+            } catch (error) {
+              alert(`Insufficient balance to transfer`);
+            }
           }}
         >
           Initiate Transfer
