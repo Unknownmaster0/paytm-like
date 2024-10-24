@@ -64,6 +64,7 @@ const signUpRoute = async function (req, res) {
         username: user.username,
         balance: account.balance,
         token,
+        id: user._id,
       })
     );
   } catch (err) {

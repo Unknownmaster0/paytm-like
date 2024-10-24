@@ -6,12 +6,14 @@ import { ButtonComponent } from "../Components/ButtonComponent";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../url";
+import Spinner from "../Components/Spinner";
 
 export const Dashboard = function () {
   const [inputVal, setInput] = useState("");
   const [users, setUsers] = useState([]);
   const [authenciated, setAuthenciated] = useState(false);
   const [balance, setBalance] = useState(null);
+  const [userName, setUsername] = useState(null);
 
   const navigate = useNavigate();
 
@@ -36,6 +38,7 @@ export const Dashboard = function () {
         if (response.data.success) {
           setAuthenciated(true);
           const res = response.data.data;
+          setUsername(res.name);
           setBalance(res.balance);
         } else {
           navigate("/signin");
@@ -72,11 +75,15 @@ export const Dashboard = function () {
     return () => clearTimeout(timer);
   }, [inputVal, sendRequest]);
 
-  if (!authenciated) return null;
+  if (!authenciated) {
+    return <Spinner />;
+  }
+
+  console.log(`username: ${userName}`);
 
   return (
     <div>
-      <AppBar />
+      {userName ? <AppBar username={userName} /> : <AppBar />}
       <div className="px-10 py-2">
         <Balance balance={balance} />
         <InputComponent

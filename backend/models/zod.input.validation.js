@@ -25,10 +25,22 @@ const updateBodySchema = zod.object({
   lastName: zod.string().optional(),
 });
 
+const transferSchema = zod.object({
+  to: zod.string().min(1),
+  amount: zod.number().min(1),
+  pin: zod.string().min(4),
+});
+
+const upiSchema = zod.object({
+  pin: zod.string().length(4, { message: 'Must have exact 4 length' }),
+});
+
 module.exports = {
   userNameSchema,
   passwordSchema,
   firstNameSchema,
   lastNameSchema,
   updateBodySchema,
+  transferSchema,
+  upiSchema,
 };

@@ -6,7 +6,7 @@ export const AppBar = function ({ username = null }) {
         <div className="flex justify-between w-32 items-center">
           <div className="text-lg">Hello</div>
           <div className="border-2 border-blue-400 rounded-full h-10 w-10 flex justify-center items-center">
-            <div className="text-2xl">username</div>
+            <div className="text-2xl">{username[0]}</div>
           </div>
         </div>
       )}
