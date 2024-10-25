@@ -7,7 +7,10 @@
 - **User Sign-Up**: When a user signs up, they receive a random balance under 10,000.
 - **Money Transfer**: Users can transfer money to any other user displayed on the dashboard.
 - **Secure Transactions**: The app ensures secure money transfers using encrypted authentication mechanisms.
-
+- **Transaction History**: The user can see past transactions with date-time, user information, and amount.
+- **UPI pin**: Requirement of upi pin to transfer the money, that user can create at time of sign-up or can update their pin anytime while going to dashboard.
+- **Logout**: User can also log-out
+  
 ## How to Run
 
 To run the app, follow these steps for both the frontend and backend:
