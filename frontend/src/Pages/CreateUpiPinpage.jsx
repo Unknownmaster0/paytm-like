@@ -1,24 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppBar } from "../Components/AppBarComponent";
 import { InputComponent } from "../Components/InputBoxComponent";
-import { ButtonComponent } from "../Components/ButtonComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../url";
 import Spinner from "../Components/Spinner";
 
+const token = localStorage.getItem("token");
 export const CreateUpiPin = () => {
   const navigate = useNavigate();
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const onClickHandler = async () => {
-    const token = localStorage.getItem("token");
+  useEffect(() => {
     if (!token) {
       navigate("/");
       return;
     }
+  }, []);
 
+  const onClickHandler = async () => {
     if (pin.length < 4 || pin.length > 4) {
       alert("Pin must be of length 4");
       return;

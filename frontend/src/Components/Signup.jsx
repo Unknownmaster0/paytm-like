@@ -78,7 +78,7 @@ export const Signup = () => {
                   "token",
                   `Bearer ${response.data.data.token}`
                 );
-                navigate("/createUpiPin");
+                navigate("/pin");
                 setLoading(false);
               }
             } catch (error) {

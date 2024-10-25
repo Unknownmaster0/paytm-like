@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../url";
+import { validateUser } from "../ApiCalls/validate";
 
 export const SendMoney = function () {
   const [searchParams] = useSearchParams();
@@ -23,16 +24,9 @@ export const SendMoney = function () {
           return;
         }
 
-        const response = await axios.get(
-          `${BACKEND_URL}/api/v1/user/validate`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        );
+        const response = await validateUser({ token });
 
-        if (!response.data.success) {
+        if (!response.success) {
           navigate("/signin");
         }
       } catch (err) {

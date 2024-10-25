@@ -104,12 +104,14 @@ const bulk = async function (req, res) {
       ],
     });
 
-    const data = users.map((user) => ({
-      username: user.username,
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    }));
+    const data = users
+      .map((user) => ({
+        username: user.username,
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      }))
+      .filter((user) => (user.id).toString() !== req.userId);
 
     return res.status(200).json(new ApiResponse(200, 'success', data));
   } catch (err) {

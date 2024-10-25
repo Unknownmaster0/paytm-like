@@ -5,6 +5,7 @@ import { Dashboard } from "./Pages/Dashboard";
 import { SignupPage } from "./Pages/SignupPage";
 import { CreateUpiPin } from "./Pages/CreateUpiPinpage";
 import { RenderTransaction } from "./Components/RenderTransaction";
+import { PageError } from "./Pages/PageError";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function MainComponent() {
       <Route path="/sendmoney" element={<SendMoney />} />
       <Route path="/pin" element={<CreateUpiPin />} />
       <Route path="/render/:userName" element={<RenderTransaction />} />
+      <Route path="/*" element={<PageError />} />
     </Routes>
   );
 }

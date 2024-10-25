@@ -47,7 +47,11 @@ export const Dashboard = function () {
         <Spinner />
       ) : (
         <div>
-          {userName ? <AppBar username={userName} /> : <AppBar />}
+          {userName ? (
+            <AppBar username={userName} logout={true} />
+          ) : (
+            <AppBar logout={true} />
+          )}
           <div className="px-10 py-2">
             <div className="flex items-center">
               <Balance balance={balance} />
@@ -55,7 +59,7 @@ export const Dashboard = function () {
                 <div className="flex flex-grow justify-end">
                   <Link
                     to={`/render/${userName}`}
-                    className="bg-blue-800 text-zinc-200 sm:text-lg rounded-lg sm:px-7 px-3"
+                    className="bg-blue-800 text-zinc-200 sm:text-lg rounded-lg sm:px-7 px-2 text-[10px] sm:py-2"
                   >
                     Transaction History
                   </Link>
