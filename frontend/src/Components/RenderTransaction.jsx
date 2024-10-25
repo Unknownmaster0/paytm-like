@@ -4,13 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../url";
 import { AppBar } from "./AppBarComponent";
-import { validateUser } from "../ApiCalls/validate";
 
 export function RenderTransaction() {
   const navigate = useNavigate();
   const [transaction, setTransaction] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
   const { userName } = useParams();
 
   useEffect(() => {

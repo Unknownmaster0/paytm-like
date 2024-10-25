@@ -15,6 +15,7 @@ export const Dashboard = function () {
   const [authenciated, setAuthenciated] = useState(false);
   const [balance, setBalance] = useState(null);
   const [userName, setUsername] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -33,6 +34,7 @@ export const Dashboard = function () {
           setAuthenciated(true);
           setUsername(response.data.name);
           setBalance(response.data.balance);
+          if (loading) setLoading(false);
         } else {
           navigate("/signin");
           return;
@@ -56,6 +58,7 @@ export const Dashboard = function () {
       }
     );
     setUsers(response.data.data);
+    if (loading) setLoading(false);
   }, [inputVal]);
 
   // Debounce the sendRequest call
@@ -74,32 +77,38 @@ export const Dashboard = function () {
 
   return (
     <div>
-      {userName ? <AppBar username={userName} /> : <AppBar />}
-      <div className="px-10 py-2">
-        <div className="flex items-center">
-          <Balance balance={balance} />
-          {authenciated && (
-            <div className="flex flex-grow justify-end">
-              <Link
-                to={`/render/${userName}`}
-                className="bg-blue-800 text-zinc-200 sm:text-lg rounded-lg sm:px-7 px-3"
-              >
-                Transaction History
-              </Link>
-            </div>
-          )}
-        </div>
+      {loading ? (
+        <Spinner />
+      ) : (
         <div>
-          <InputComponent
-            label={"Users"}
-            placeholder={"search users"}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          {users.map((user, idx) => (
-            <UserDislay key={user.id} user={user} />
-          ))}
+          {userName ? <AppBar username={userName} /> : <AppBar />}
+          <div className="px-10 py-2">
+            <div className="flex items-center">
+              <Balance balance={balance} />
+              {authenciated && (
+                <div className="flex flex-grow justify-end">
+                  <Link
+                    to={`/render/${userName}`}
+                    className="bg-blue-800 text-zinc-200 sm:text-lg rounded-lg sm:px-7 px-3"
+                  >
+                    Transaction History
+                  </Link>
+                </div>
+              )}
+            </div>
+            <div>
+              <InputComponent
+                label={"Users"}
+                placeholder={"search users"}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              {users.map((user, idx) => (
+                <UserDislay key={user.id} user={user} />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
