@@ -24,7 +24,7 @@ function MainComponent() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/sendmoney" element={<SendMoney />} />
       <Route path="/pin" element={<CreateUpiPin />} />
-      <Route path="/render" element={<RenderTransaction />} />
+      <Route path="/render/:userName" element={<RenderTransaction />} />
     </Routes>
   );
 }

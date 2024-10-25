@@ -4,7 +4,7 @@ import { Balance } from "../Components/BalanceComponent";
 import { InputComponent } from "../Components/InputBoxComponent";
 import { ButtonComponent } from "../Components/ButtonComponent";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../url";
 import Spinner from "../Components/Spinner";
 import { validateUser } from "../ApiCalls/validate";
@@ -14,7 +14,7 @@ export const Dashboard = function () {
   const [users, setUsers] = useState([]);
   const [authenciated, setAuthenciated] = useState(false);
   const [balance, setBalance] = useState(null);
-  const [userName, setUsername] = useState(null);
+  const [userName, setUsername] = useState("");
 
   const navigate = useNavigate();
 
@@ -27,12 +27,12 @@ export const Dashboard = function () {
           return;
         }
 
-        const response = validateUser({ token });
+        const response = await validateUser({ token });
 
         if (response.success) {
           setAuthenciated(true);
-          setUsername(res.data.name);
-          setBalance(res.data.balance);
+          setUsername(response.data.name);
+          setBalance(response.data.balance);
         } else {
           navigate("/signin");
           return;
@@ -72,21 +72,33 @@ export const Dashboard = function () {
     return <Spinner />;
   }
 
-  console.log(`username: ${userName}`);
-
   return (
     <div>
       {userName ? <AppBar username={userName} /> : <AppBar />}
       <div className="px-10 py-2">
-        <Balance balance={balance} />
-        <InputComponent
-          label={"Users"}
-          placeholder={"search users"}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        {users.map((user, idx) => (
-          <UserDislay key={user.id} user={user} />
-        ))}
+        <div className="flex items-center">
+          <Balance balance={balance} />
+          {authenciated && (
+            <div className="flex flex-grow justify-end">
+              <Link
+                to={`/render/${userName}`}
+                className="bg-blue-800 text-zinc-200 sm:text-lg rounded-lg sm:px-7 px-3"
+              >
+                Transaction History
+              </Link>
+            </div>
+          )}
+        </div>
+        <div>
+          <InputComponent
+            label={"Users"}
+            placeholder={"search users"}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          {users.map((user, idx) => (
+            <UserDislay key={user.id} user={user} />
+          ))}
+        </div>
       </div>
     </div>
   );

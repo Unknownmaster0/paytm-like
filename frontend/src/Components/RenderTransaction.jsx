@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../url";
 import { AppBar } from "./AppBarComponent";
@@ -11,6 +11,7 @@ export function RenderTransaction() {
   const [transaction, setTransaction] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const { userName } = useParams();
 
   useEffect(() => {
     // check valid token.
@@ -20,31 +21,6 @@ export function RenderTransaction() {
       navigate("/");
       return;
     }
-
-    (async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.log(`in the token part`);
-          navigate("/signin");
-          return;
-        }
-
-        const response = await validateUser({ token });
-
-        if (response.success) {
-          setUser(response.data.name);
-        } else {
-          console.log(`in the response success part`);
-          navigate("/signin");
-          return;
-        }
-      } catch (err) {
-        console.error(`Error while validation of the user ${err}`);
-        navigate("/signin");
-        return;
-      }
-    })();
 
     // otherwise setTransaction.
     (async () => {
@@ -72,7 +48,7 @@ export function RenderTransaction() {
 
   return (
     <div>
-      <AppBar username={user} />
+      <AppBar username={userName} />
       {loading && <Spinner />}
       <div className="container px-4 mx-auto sm:px-8 max-w-screen">
         <div className="py-8">
