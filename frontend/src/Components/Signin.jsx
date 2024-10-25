@@ -17,7 +17,7 @@ export const Signin = function () {
 
   return (
     <div className="flex items-center justify-center flex-grow">
-      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
         <TopBar label={"Sign In"} />
         <TopBarText text={"Enter the details to "} to={"signin"} />
         <InputComponent
@@ -34,7 +34,7 @@ export const Signin = function () {
           label={"Sign In"}
           onClick={async () => {
             {
-              loading ? <Spinner /> : null;
+              loading && <Spinner />;
             }
             try {
               const response = await axios.post(

@@ -53,15 +53,21 @@ export const Dashboard = function () {
             <AppBar logout={true} />
           )}
           <div className="px-10 py-2">
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
               <Balance balance={balance} />
               {authenciated && (
-                <div className="flex flex-grow justify-end">
+                <div className="flex sm:space-x-4 space-x-1 justify-end">
                   <Link
                     to={`/render/${userName}`}
-                    className="bg-blue-800 text-zinc-200 sm:text-lg rounded-lg sm:px-7 px-2 text-[10px] sm:py-2"
+                    className="bg-blue-800 text-zinc-200 sm:text-sm sm:font-bold rounded-lg px-2 text-[10px] sm:py-2"
                   >
                     Transaction History
+                  </Link>
+                  <Link
+                    to={`/pin/${userName}`}
+                    className="bg-blue-800 text-zinc-200 sm:text-sm sm:font-bold rounded-lg px-2 text-[10px] sm:py-2"
+                  >
+                    update upi pin
                   </Link>
                 </div>
               )}
@@ -88,12 +94,12 @@ function UserDislay({ user }) {
   const firstLetter = user.firstName[0];
   const navigate = useNavigate();
   return (
-    <div className="flex justify-between my-2">
+    <div className="flex justify-between my-2 border-b p-2">
       <div className="flex items-center">
         <div className="w-10 h-10 rounded-full bg-slate-500 flex justify-center items-center">
           <div className="text-zinc-100">{firstLetter}</div>
         </div>
-        <div className="pl-2">
+        <div className="pl-2 text-lg">
           {user.firstName} {user.lastName}
         </div>
       </div>

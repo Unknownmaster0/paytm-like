@@ -20,7 +20,7 @@ export const Signup = () => {
 
   return (
     <div className="flex-grow flex items-center justify-center">
-      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
         <TopBar label={"Sign Up"} />
         <TopBarText text={"Enter the details to "} to={"signup"} />
         <InputComponent
@@ -60,7 +60,7 @@ export const Signup = () => {
               setIsVisible(true);
             }
             {
-              loading ? <Spinner /> : null;
+              loading && <Spinner />;
             }
             try {
               const response = await axios.post(
@@ -78,7 +78,7 @@ export const Signup = () => {
                   "token",
                   `Bearer ${response.data.data.token}`
                 );
-                navigate("/pin");
+                navigate(`/pin/${firstName}`);
                 setLoading(false);
               }
             } catch (error) {

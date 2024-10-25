@@ -24,7 +24,7 @@ function MainComponent() {
       <Route path="/signin" element={<SigninPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/sendmoney" element={<SendMoney />} />
-      <Route path="/pin" element={<CreateUpiPin />} />
+      <Route path="/pin/:userName" element={<CreateUpiPin />} />
       <Route path="/render/:userName" element={<RenderTransaction />} />
       <Route path="/*" element={<PageError />} />
     </Routes>

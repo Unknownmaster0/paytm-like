@@ -12,7 +12,7 @@ export const SignupPage = function () {
         <div className="flex items-center justify-center h-full">
           <Signup />
         </div>
-        <div className="hidden sm:flex items-center justify-center bg-blue-400 h-full">
+        <div className="hidden sm:flex items-center justify-center bg-green-200  h-full">
           <AppPromotion />
         </div>
       </div>

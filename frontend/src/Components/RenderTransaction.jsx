@@ -46,7 +46,7 @@ export function RenderTransaction() {
 
   return (
     <div>
-      <AppBar username={userName} />
+      <AppBar username={userName} logout={true}/>
       {loading && <Spinner />}
       <div className="container px-4 mx-auto sm:px-8 max-w-screen">
         <div className="py-8">

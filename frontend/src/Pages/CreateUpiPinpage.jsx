@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AppBar } from "../Components/AppBarComponent";
 import { InputComponent } from "../Components/InputBoxComponent";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../url";
 import Spinner from "../Components/Spinner";
@@ -11,6 +11,7 @@ export const CreateUpiPin = () => {
   const navigate = useNavigate();
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(true);
+  const { userName } = useParams();
 
   useEffect(() => {
     if (!token) {
@@ -58,7 +59,7 @@ export const CreateUpiPin = () => {
   return (
     <div className="h-screen flex flex-col">
       <div>
-        <AppBar />
+        <AppBar username={userName} logout={true} />
       </div>
       <div className="flex-grow h-full flex items-center justify-center">
         <div className="flex flex-col items-center">

@@ -9,7 +9,8 @@ export const SendMoney = function () {
   const [searchParams] = useSearchParams();
   const name = searchParams.get("name");
   const id = searchParams.get("id");
-  const [money, setMoney] = useState();
+  const [money, setMoney] = useState(0);
+  const [pin, setPin] = useState("");
   const [warning, setWarning] = useState(false);
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ export const SendMoney = function () {
         <div className="mb-4">
           {warning && (
             <p className="text-red-700 text-pretty">
-              Amount send can't be decmial number and negative
+              Amount send can't be decmial,0,negative and can't be left empty.
             </p>
           )}
           <label
@@ -66,10 +67,22 @@ export const SendMoney = function () {
           </label>
           <input
             onChange={(e) => setMoney(e.target.value)}
+            // value={money}
             type="number"
-            id="amount"
             placeholder="Enter amount"
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="pin">
+            UPI Pin
+          </label>
+          <input
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            type="password"
+            placeholder="Upi Pin"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
           />
         </div>
         <button
@@ -77,15 +90,22 @@ export const SendMoney = function () {
           onClick={async () => {
             try {
               // if the input money is decimals value, then return the message that money send couldn't be decimal value.
-              if (String(money).includes(".") || String(money)[0] === "-") {
+              if (
+                money < 0 ||
+                String(money).includes(".") ||
+                money == 0 ||
+                !money
+              ) {
                 setWarning(true);
                 return;
               }
+
               const response = await axios.post(
                 `${BACKEND_URL}/api/v1/account/transfer`,
                 {
                   to: id,
-                  amount: money,
+                  amount: Number(money),
+                  pin: pin,
                 },
                 {
                   headers: {
@@ -93,7 +113,13 @@ export const SendMoney = function () {
                   },
                 }
               );
-              navigate("/dashboard");
+              if (response.data.success) {
+                navigate("/dashboard");
+                return;
+              } else {
+                alert(response.data.data.message);
+                return;
+              }
             } catch (error) {
               alert(error.message);
             }
