@@ -130,6 +130,9 @@ const getMovements = async function (req, res) {
     select: `_id firstName lastName`,
   });
 
+  // sort by createdAt in descending order.
+  account.movements.sort((a, b) => b.createdAt - a.createdAt);
+
   const newData = account.movements.map((obj) => ({
     amount: obj.amount,
     user: {
