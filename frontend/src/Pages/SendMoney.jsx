@@ -9,6 +9,7 @@ export const SendMoney = function () {
   const name = searchParams.get("name");
   const id = searchParams.get("id");
   const [money, setMoney] = useState();
+  const [warning, setWarning] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +59,11 @@ export const SendMoney = function () {
         </div>
 
         <div className="mb-4">
+          {warning && (
+            <p className="text-red-700 text-pretty">
+              Amount send can't be decmial number and negative
+            </p>
+          )}
           <label
             className="block text-gray-700 font-medium mb-2"
             htmlFor="amount"
@@ -76,6 +82,11 @@ export const SendMoney = function () {
           className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300"
           onClick={async () => {
             try {
+              // if the input money is decimals value, then return the message that money send couldn't be decimal value.
+              if (String(money).includes(".") || String(money)[0] === "-") {
+                setWarning(true);
+                return;
+              }
               const response = await axios.post(
                 `${BACKEND_URL}/api/v1/account/transfer`,
                 {
@@ -90,7 +101,7 @@ export const SendMoney = function () {
               );
               navigate("/dashboard");
             } catch (error) {
-              alert(`Insufficient balance to transfer`);
+              alert(error.message);
             }
           }}
         >

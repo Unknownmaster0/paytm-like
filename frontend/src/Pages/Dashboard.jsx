@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AppBar } from "../Components/AppBarComponent";
 import { Balance } from "../Components/BalanceComponent";
 import { InputComponent } from "../Components/InputBoxComponent";
@@ -7,45 +7,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../url";
 import Spinner from "../Components/Spinner";
-import { validateUser } from "../ApiCalls/validate";
+import { useUserhook } from "../CustomHooks/useUserhooks";
 
 export const Dashboard = function () {
   const [inputVal, setInput] = useState("");
   const [users, setUsers] = useState([]);
-  const [authenciated, setAuthenciated] = useState(false);
-  const [balance, setBalance] = useState(null);
-  const [userName, setUsername] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          navigate("/signin");
-          return;
-        }
-
-        const response = await validateUser({ token });
-
-        if (response.success) {
-          setAuthenciated(true);
-          setUsername(response.data.name);
-          setBalance(response.data.balance);
-          if (loading) setLoading(false);
-        } else {
-          navigate("/signin");
-          return;
-        }
-      } catch (err) {
-        console.error(`Error while validation of the user ${err}`);
-        navigate("/signin");
-        return;
-      }
-    })();
-  }, [navigate]);
+  const { userName, balance, authenciated, loading } = useUserhook();
 
   // Use useCallback for debounced search request
   const sendRequest = useCallback(async () => {
@@ -58,7 +25,6 @@ export const Dashboard = function () {
       }
     );
     setUsers(response.data.data);
-    if (loading) setLoading(false);
   }, [inputVal]);
 
   // Debounce the sendRequest call
