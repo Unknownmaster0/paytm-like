@@ -3,13 +3,14 @@ import Spinner from "./Spinner";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../url";
+import { AppBar } from "./AppBarComponent";
+import { validateUser } from "../ApiCalls/validate";
 
 export function RenderTransaction() {
   const navigate = useNavigate();
   const [transaction, setTransaction] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  console.log(transaction);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     // check valid token.
@@ -19,6 +20,32 @@ export function RenderTransaction() {
       navigate("/");
       return;
     }
+
+    (async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.log(`in the token part`);
+          navigate("/signin");
+          return;
+        }
+
+        const response = await validateUser({ token });
+
+        if (response.success) {
+          setUser(response.data.name);
+        } else {
+          console.log(`in the response success part`);
+          navigate("/signin");
+          return;
+        }
+      } catch (err) {
+        console.error(`Error while validation of the user ${err}`);
+        navigate("/signin");
+        return;
+      }
+    })();
+
     // otherwise setTransaction.
     (async () => {
       try {
@@ -45,53 +72,106 @@ export function RenderTransaction() {
 
   return (
     <div>
+      <AppBar username={user} />
       {loading && <Spinner />}
-      {transaction.length > 0 ? (
-        transaction.map((transaction) => (
-          <Render
-            key={transaction.id}
-            amount={
-              transaction.amount > 0
-                ? transaction.amount
-                : -1 * transaction.amount
-            }
-            userDetail={transaction.user.firstName + transaction.user.lastName}
-            type={transaction.amount > 0 ? "Received" : "Send"}
-            date={transaction.createdAt}
-          />
-        ))
-      ) : (
-        <NoTransactionCard />
-      )}
+      <div className="container px-4 mx-auto sm:px-8 max-w-screen">
+        <div className="py-8">
+          <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
+            <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
+              <table className="min-w-full leading-normal">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200 sm:text-2xl sm:font-bold"
+                    >
+                      Transaction type
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200 sm:text-2xl sm:font-bold"
+                    >
+                      User
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200 sm:text-2xl sm:font-bold"
+                    >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200 sm:text-2xl sm:font-bold"
+                    >
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transaction.length > 0 ? (
+                    transaction.map((transaction) => (
+                      <Render
+                        key={transaction.id}
+                        amount={
+                          transaction.amount > 0
+                            ? transaction.amount
+                            : -1 * transaction.amount
+                        }
+                        userDetail={
+                          transaction.user.firstName +
+                          " " +
+                          transaction.user.lastName
+                        }
+                        type={transaction.amount > 0 ? "Received" : "Send"}
+                        date={transaction.createdAt}
+                      />
+                    ))
+                  ) : (
+                    <NoTransactionCard />
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 const Render = ({ amount, userDetail, type, date }) => {
   return (
-    <div className="sm:p-8">
-      <div className="flex justify-evenly text-xl text-slate-900 font-bold border border-red-900 ">
-        <div className="border-r-2  border-red-900 flex items-center justify-center">
-          <p>{type}</p>
-        </div>
-        <div className="border-r-2  border-red-900">
-          <p>{userDetail}</p>
-        </div>
-        <div className="border-r-2 border-red-900">
-          <p>{date}</p>
-        </div>
-        <div>
-          <p>{amount}</p>
-        </div>
-      </div>
-    </div>
+    <tr>
+      <td className="sm:px-5 px-2 sm:py-5 py-2 text-sm bg-white border-b border-gray-200 sm:text-lg sm:font-semibold relative sm:left-10 left-5">
+        <span className="text-gray-900 whitespace-no-wrap">{type}</span>
+      </td>
+      <td className="sm:px-5 px-2 sm:py-5 py-2 text-sm bg-white border-b border-gray-200 relative sm:-left-5 -left-2">
+        <p className="text-gray-900 whitespace-no-wrap sm:text-lg sm:font-semibold">
+          {userDetail}
+        </p>
+      </td>
+      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+        <p className="text-gray-900 whitespace-no-wrap sm:text-lg sm:font-semibold">
+          {date}
+        </p>
+      </td>
+      <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+        <span className="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900 sm:text-lg sm:font-semibold">
+          {amount}
+        </span>
+      </td>
+    </tr>
   );
 };
 
 const NoTransactionCard = () => {
   return (
-    <div className="text-4xl text-slate-500 font-extrabold">
-      You have no transaction to show
-    </div>
+    <tr>
+      <td>
+        <p className="text-4xl font-extrabold">
+          You have no transaction to show
+        </p>
+      </td>
+    </tr>
   );
 };

@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../url";
 import Spinner from "../Components/Spinner";
+import { validateUser } from "../ApiCalls/validate";
 
 export const Dashboard = function () {
   const [inputVal, setInput] = useState("");
@@ -26,20 +27,12 @@ export const Dashboard = function () {
           return;
         }
 
-        const response = await axios.get(
-          `${BACKEND_URL}/api/v1/user/validate`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        );
+        const response = validateUser({ token });
 
-        if (response.data.success) {
+        if (response.success) {
           setAuthenciated(true);
-          const res = response.data.data;
-          setUsername(res.name);
-          setBalance(res.balance);
+          setUsername(res.data.name);
+          setBalance(res.data.balance);
         } else {
           navigate("/signin");
           return;
