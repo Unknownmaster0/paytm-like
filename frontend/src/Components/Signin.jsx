@@ -9,10 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../url";
 import Spinner from "../Components/Spinner";
 
-export const Signin = function () {
+export const Signin = function ({setLoading}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   return (
@@ -33,9 +32,7 @@ export const Signin = function () {
         <ButtonComponent
           label={"Sign In"}
           onClick={async () => {
-            {
-              loading && <Spinner />;
-            }
+            setLoading(true);
             try {
               const response = await axios.post(
                 `${BACKEND_URL}/api/v1/user/signin`,
@@ -53,6 +50,8 @@ export const Signin = function () {
               }
             } catch (error) {
               alert(error.message);
+            }finally{
+              setLoading(false);
             }
           }}
         />

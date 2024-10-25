@@ -6,17 +6,15 @@ import { BottomTexts } from "../Components/BottomTextComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Spinner from "../Components/Spinner";
 import { BACKEND_URL } from "../url";
 
-export const Signup = () => {
+export const Signup = ({ setLoading }) => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   return (
     <div className="flex-grow flex items-center justify-center">
@@ -40,8 +38,8 @@ export const Signup = () => {
         />
         {isVisible && (
           <div className="text-red-600">
-            Password should must contain atleast one Uppercase, Lowercase,
-            Special Characters, and Numbers and minimum 8 in length
+            Password should contain at least one Uppercase, Lowercase, Special
+            Characters, and Numbers, and be a minimum of 8 in length.
           </div>
         )}
         <InputComponent
@@ -49,7 +47,7 @@ export const Signup = () => {
             setPassword(e.target.value);
           }}
           label={"Password"}
-          placeholder={""}
+          placeholder={"********"}
         />
         <ButtonComponent
           onClick={async () => {
@@ -58,10 +56,9 @@ export const Signup = () => {
             );
             if (password.length < 8 || !pattern.test(password)) {
               setIsVisible(true);
+              return;
             }
-            {
-              loading && <Spinner />;
-            }
+            setLoading(true);
             try {
               const response = await axios.post(
                 `${BACKEND_URL}/api/v1/user/signup`,
@@ -80,9 +77,16 @@ export const Signup = () => {
                 );
                 navigate(`/pin/${firstName}`);
                 setLoading(false);
+              } else {
+                alert("Signup failed, please check your inputs.");
               }
             } catch (error) {
-              alert("Enter the valid input");
+              alert(
+                "Enter valid input. " + error.response?.data?.message ||
+                  error.message
+              );
+            } finally {
+              setLoading(false);
             }
           }}
           label={"Sign Up"}

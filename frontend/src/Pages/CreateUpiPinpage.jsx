@@ -10,7 +10,7 @@ const token = localStorage.getItem("token");
 export const CreateUpiPin = () => {
   const navigate = useNavigate();
   const [pin, setPin] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { userName } = useParams();
 
   useEffect(() => {
@@ -25,11 +25,8 @@ export const CreateUpiPin = () => {
       alert("Pin must be of length 4");
       return;
     }
-
+    setLoading(true);
     try {
-      {
-        loading ? <Spinner /> : null;
-      }
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/account/createUpiPin`,
         {
@@ -57,31 +54,37 @@ export const CreateUpiPin = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      <div>
-        <AppBar username={userName} logout={true} />
-      </div>
-      <div className="flex-grow h-full flex items-center justify-center">
-        <div className="flex flex-col items-center">
+    <div>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="h-screen flex flex-col">
           <div>
-            <p className="text-sm font-semibold text-zinc-300">
-              Upi pin must be of 4 length only
-            </p>
-            <InputComponent
-              label={"Create Your Upi Pin"}
-              placeholder={"1234"}
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-            />
+            <AppBar username={userName} logout={true} />
           </div>
-          <button
-            onClick={onClickHandler}
-            className="bg-black text-white font-bold py-2 px-4 border rounded hover:bg-gray-700 w-[120px]"
-          >
-            {"Create Pin"}
-          </button>
+          <div className="flex-grow h-full flex items-center justify-center">
+            <div className="flex flex-col items-center">
+              <div>
+                <p className="text-sm font-semibold text-zinc-300">
+                  Upi pin must be of 4 length only
+                </p>
+                <InputComponent
+                  label={"Create Your Upi Pin"}
+                  placeholder={"1234"}
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={onClickHandler}
+                className="bg-black text-white font-bold py-2 px-4 border rounded hover:bg-gray-700 w-[120px]"
+              >
+                {"Create Pin"}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
